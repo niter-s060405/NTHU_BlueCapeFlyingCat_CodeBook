@@ -1,33 +1,25 @@
+/*Tested: https://judge.yosupo.jp/submission/318106 (mod version)
+Write by: kactl*/
 // 若一個線性遞迴有 k 項，給他恰好 2*k 個項可以求出線性遞迴
-// f915c2
-template <typename T>
-vector<T> BerlekampMassey(vector<T> a) {
-    auto scalarProduct = [](vector<T> v, T c) {
-        for (T &x: v) x *= c;
-        return v;
-    };
-    vector<T> s, best;
-    int bestPos = 0;
-    for (int i=0 ; i<a.size() ; i++){
-        T error = a[i];
-        for (int j=0 ; j<s.size() ; j++) error -= s[j] * a[i-1-j];
-        if (error == 0) continue;
-        if (s.empty()) {
-            s.resize(i + 1);
-            bestPos = i;
-            best.push_back(1 / error);
-            continue;
-        }
-        vector<T> fix = scalarProduct(best, error);
-        fix.insert(fix.begin(), i - bestPos - 1, 0);
-        if (fix.size() >= s.size()) {
-            best = scalarProduct(s, - 1 / error);
-            best.insert(best.begin(), 1 / error);
-            bestPos = i;
-            s.resize(fix.size());
-        }
-        for (int j = 0; j < fix.size(); j++) s[j] += fix[j];
+// s = 1 1 3 7 17, 則它會回傳 1 2
+vector<int> BerlekampMassey(vector<int> s) {
+    if (s.empty()) return vector<int>();
+    int n = s.size(), L = 0, m = 0;
+    vector<int> C(n), B(n), T;
+    C[0] = B[0] = 1;
+
+    int b = 1;
+    for (int i=0 ; i<n ; i++) {
+        ++m; int d = s[i]%MOD;
+        for (int j=1 ; j<L+1 ; j++) d = (d+C[j]*s[i-j])%MOD;
+        if (!d) continue;
+        T = C; int coef = d*qp(b, MOD-2, MOD)%MOD;
+        for (int j=m ; j<n ; j++) C[j] = (C[j]-coef*B[j-m])%MOD;
+        if (2*L>i) continue;
+        L = i+1-L; B=T; b=d; m=0;
     }
-    reverse(s.begin(), s.end());
-    return s;
+    C.resize(L+1); C.erase(C.begin());
+    for (int &x : C) x = (MOD-x)%MOD;
+    reverse(C.begin(), C.end());
+    return C;
 }
