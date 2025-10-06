@@ -221,6 +221,11 @@ def get_hash(file_path):
 
     return md5_hash[:6]
 
+def split_sort_value(name):
+    for i in range(0, len(name)):
+        if not name[i].isdigit():
+            return [int(name[:i]), name[i+1:]]
+    return [999, name]
 
 def PrepareFileDict(CurPath):
     FileDict = {}
@@ -238,7 +243,11 @@ def PrepareFileDict(CurPath):
             DirName = toLatex(split(root)[-1])
             if DirName not in FileDict:
                 FileDict[DirName] = []
-            FileDict[DirName].append((file_extension, toLatex(name), replace(fullpath)))
+            sort_value = 999
+            printed_name = toLatex(name)
+            if len(printed_name) > 0 and printed_name[0].isdigit():
+                sort_value, printed_name = split_sort_value(printed_name)
+            FileDict[DirName].append((file_extension, sort_value, printed_name, replace(fullpath)))
     return FileDict
 
 
@@ -248,20 +257,10 @@ def cmp(x):
         val = -1
     return [val, x]
 
-def cmp2(x):
-    val = 0
-    if x[1] == "Note":
-        val = -3
-    elif x[1] == "Default Code":
-        val = -2
-    elif x[1] == "Run":
-        val = -1
-    return [val, x]
-
 def texCodeGen(out, FileDict, FileList):
     for key in sorted(FileDict.keys(), key=cmp):
         out.write("\\section{" + key + "}\n")
-        for file_extension, name, path in sorted(FileDict[key], key=cmp2):
+        for file_extension, sort_value, name, path in sorted(FileDict[key], key = lambda x : [x[1], x[2]]):
             # 對於 C++ 文件，如果有長註解需要特殊處理
             if file_extension == ".cpp":
                 processed_content, has_comment = remove_long_comment_from_start(path)
