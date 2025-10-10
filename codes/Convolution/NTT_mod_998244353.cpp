@@ -4,6 +4,7 @@ const int MOD = (119 << 23) + 1, ROOT = 62; // = 998244353
 // For p < 2^30 there is also e.g. 5 << 25, 7 << 26, 479 << 21
 // and 483 << 21 (same root). The last two are > 10^9.
 
+// 7e041b
 vector<int> rt(2, 1);
 void NTT_init(int n){
     static bool lastInit = 0;
@@ -17,7 +18,7 @@ void NTT_init(int n){
     }
 }
 
-// e169db
+// fec4b8
 void NTT(vector<int> &a, int isInverse = false) {
     int n = a.size();
     int L = 31-__builtin_clz(n);
@@ -46,7 +47,7 @@ void NTT(vector<int> &a, int isInverse = false) {
     }
 }
 
-// 290957
+// 771576
 vector<int> polyMul(vector<int> a, vector<int> b){
     if (a.empty() || b.empty()) return {};
     int s = a.size()+b.size()-1, B = 32-__builtin_clz(s), n = 1<<B;
