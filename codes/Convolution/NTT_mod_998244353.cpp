@@ -11,7 +11,7 @@ void NTT(vector<int> &a) {
     vector<int> rt(2, 1);
     for (int k=2, s=2 ; k<n ; k*=2, s++){
         rt.resize(n);
-        int z[] = {1, qp(ROOT, MOD>>s)};
+        int z[] = {1, qp(ROOT, MOD>>s, MOD)};
         for (int i=k ; i<2*k ; i++) rt[i] = rt[i/2]*z[i&1]%MOD;
     }
 
@@ -36,7 +36,7 @@ void NTT(vector<int> &a) {
 vector<int> polyMul(vector<int> &a, vector<int> &b){
     if (a.empty() || b.empty()) return {};
     int s = a.size()+b.size()-1, B = 32-__builtin_clz(s), n = 1<<B;
-    int inv = qp(n, MOD-2);
+    int inv = qp(n, MOD-2, MOD);
     vector<int> L(a), R(b), out(n);
     L.resize(n), R.resize(n);
     NTT(L), NTT(R);
