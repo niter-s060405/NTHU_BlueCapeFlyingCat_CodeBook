@@ -1,0 +1,56 @@
+name: 錯誤回報 (Bug Report)
+description: 回報程式碼範本中的錯誤。
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: input
+    id: file-path
+    attributes:
+      label: 相關檔案路徑 (File Path)
+      description: "請提供有問題的程式碼檔案路徑。"
+      placeholder: "e.g., codes/Graph/Dinic.cpp"
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 錯誤描述 (Bug Description)
+      description: "請詳細描述您遇到的錯誤。"
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: 重現步驟 (Steps to Reproduce)
+      description: "請提供重現此錯誤的詳細步驟。"
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: 預期行為 (Expected Behavior)
+      description: "請描述您預期程式碼應有的正確行為。"
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: 實際行為 (Actual Behavior)
+      description: "請描述程式碼實際發生的行為。"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 測試環境 (Environment)
+      description: "請提供您的測試環境資訊 (例如：作業系統、編譯器版本)。"
+      placeholder: "e.g., Ubuntu 22.04, g++ 11.2.0"
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 附加內容 (Additional Context)
+      description: "可以附上螢幕截圖、錯誤訊息等任何有助於解決問題的資訊。"

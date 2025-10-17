@@ -1,0 +1,27 @@
+name: 文件改善 (Documentation Improvement)
+description: 針對文件、註解等提出改善建議。
+title: "[Docs] "
+labels: ["documentation"]
+body:
+  - type: input
+    id: file-section
+    attributes:
+      label: 相關檔案/章節 (File/Section)
+      description: "請指出需要修改的文件或程式碼檔案。"
+      placeholder: "e.g., codes/Math/NTT.cpp or README.md"
+    validations:
+      required: true
+  - type: textarea
+    id: issue-description
+    attributes:
+      label: 問題描述 (Description of the issue)
+      description: "請說明目前文件或註解有什麼問題。"
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-improvement
+    attributes:
+      label: 建議修改內容 (Suggested improvement)
+      description: "請提供您建議的修改內容。"
+    validations:
+      required: true
