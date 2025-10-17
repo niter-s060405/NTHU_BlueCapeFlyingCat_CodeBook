@@ -3,36 +3,59 @@ struct SuffixArray {
     string s;
     vector<int> sa, lcp;
 
-    // 69ced9
-    // lim 要調整成字元集大小，_s 不可以有 0
-    SuffixArray(string _s, int lim = 256) {
-        s = _s;
-        int n = s.size()+1, k = 0, a, b;
-        vector<int> x(s.begin(), s.end()), y(n), ws(max(n, lim)), rank(n);
-        x.push_back(0);
-        sa = lcp = y;
-        iota(sa.begin(), sa.end(), 0);
-        for (int j=0, p=0 ; p<n ; j=max(1LL, j*2), lim=p) {
-            p = j;
-            iota(y.begin(), y.end(), n-j);
-            for (int i=0 ; i<n ; i++) if (sa[i] >= j) y[p++] = sa[i] - j;
-            fill(ws.begin(), ws.end(), 0);
-            for (int i=0 ; i<n ; i++) ws[x[i]]++;
-            for (int i=1 ; i<lim ; i++) ws[i] += ws[i - 1];
-            for (int i = n; i--;) sa[--ws[x[y[i]]]] = y[i];
-            swap(x, y), p = 1, x[sa[0]] = 0;
-            for (int i=1 ; i<n ; i++){
-                a = sa[i - 1];
-                b = sa[i];
-                x[b] = (y[a] == y[b] && y[a + j] == y[b + j]) ? p - 1 : p++;
-            }
+	// b56519
+    template<typename T>
+    void sais(const T s, int n, int *sa, int *lar, int *p, int *t, int A) {
+        int *rnk = p + n, *q = p + n / 2, *bkt = lar + A;
+        int m = 0, i, j, x = t[n - 1] = 1, y = rnk[0] = -1, cnt = -1;
+
+		for (i=n-2 ; ~i ; i--) t[i] = (s[i] == s[i + 1] ? t[i + 1] : s[i] < s[i + 1]);
+		for (i=1 ; i<n ; i++) rnk[i] = t[i] && !t[i-1] ? (p[m]=i, m++) : -1;
+        fill_n(lar, A, 0);
+		for (i=0 ; i<n ; i++) ++lar[s[i]];
+		for (i=1 ; i<A ; i++) lar[i] += lar[i-1];
+        auto pushS = [&](int x) { sa[--bkt[s[x]]] = x; };
+        auto pushL = [&](int x) { sa[bkt[s[x]]++] = x; };
+        auto induce_sort = [&](int* v) {
+            fill_n(sa, n, 0);
+            copy_n(lar, A, bkt);
+			for (i=m-1 ; ~i ; i--) pushS(v[i]);
+            copy_n(lar, A - 1, bkt + 1);
+            for (i=0 ; i<n ; i++) if (sa[i] && !t[sa[i] - 1]) pushL(sa[i] - 1);
+            copy_n(lar, A, bkt);
+            for (i=n-1 ; ~i ; i--) if (sa[i] && t[sa[i] - 1]) pushS(sa[i] - 1);
+        };
+        induce_sort(p);
+		for (i=0 ; i<n ; i++){
+			if (~(x=rnk[sa[i]])){
+				j = y < 0 || memcmp(s + p[x], s + p[y], (p[x + 1] - p[x]) * sizeof(s[0]));
+				q[y = x] = cnt += j;
+			}
+		}
+        if (cnt+1<m) sais(q, m, sa, bkt, rnk, t + n, cnt + 1);
+        else for (i=0 ; i<m ; i++) sa[q[i]] = i;
+        for (i=0 ; i<m ; i++) q[i] = p[sa[i]];
+        induce_sort(q);
+    }
+
+    // 8c731c, lim 要調整成字元集大小，_s 不可以有 0
+    template<typename T>
+    SuffixArray(const T& _s, int lim = 256) : s(_s) {
+        s.push_back(0);
+        int n = s.length();
+        sa.resize(n);
+        lcp.resize(n);
+        vector<int> bkt(n + lim * 2), p(n * 2), t(n * 2), rank(n);
+        sais(&s[0], n, &sa[0], &bkt[0], &p[0], &t[0], lim);
+        
+        for (int i=1 ; i<n ; i++) rank[sa[i]] = i;
+        for (int i=0, j, k=0 ; i<n-1 ; lcp[rank[i++]]=k){
+            for (k && k--, j=sa[rank[i]-1] ; i+k<s.size() && j+k<s.size() && s[i+k]==s[j+k] ; k++);
         }
 
-        for (int i=1 ; i<n ; i++) rank[sa[i]] = i;
-        for (int i=0, j ; i<n-1 ; lcp[rank[i++]]=k)
-            for (k && k--, j=sa[rank[i]-1] ; i+k<s.size() && j+k<s.size() && s[i+k]==s[j+k] ; k++);
         sa.erase(sa.begin());
         lcp.erase(lcp.begin(), lcp.begin()+2);
+        s.pop_back();
     }
 
     // f49583
