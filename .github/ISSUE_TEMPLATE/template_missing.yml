@@ -3,7 +3,7 @@ title: Template Missing
 description: If template have any missing content, report by this issue template.
 projects: []
 labels:
-  - Missing Template
+  - Template Missing
 body:
   - type: input
     id: input-0
