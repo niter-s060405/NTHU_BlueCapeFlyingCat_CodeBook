@@ -1,0 +1,14 @@
+name: Template Missing
+title: Template Missing
+description: If template have any missing content, report by this issue template.
+projects: []
+labels:
+  - Missing Template
+body:
+  - type: input
+    id: input-0
+    attributes:
+      label: File name
+      placeholder: Misc/2_Run.py
+    validations:
+      required: true
