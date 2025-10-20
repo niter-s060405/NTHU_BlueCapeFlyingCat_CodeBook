@@ -1,7 +1,7 @@
 // 0-based
 void C3C4(vector<int> deg, vector<array<int, 2>> edges){
     int N = deg.size();
-    int M = deges.size();
+    int M = edges.size();
     
     vector<int> ord(N), rk(N);
     iota(ord.begin(), ord.end(), 0);
@@ -9,7 +9,7 @@ void C3C4(vector<int> deg, vector<array<int, 2>> edges){
     for (int i=0 ; i<N ; i++) rk[ord[i]] = i;
     
     vector<vector<int>> D(N), adj(N);
-    for (auto [u, v] : e) {
+    for (auto [u, v] : edges) {
         if (rk[u] > rk[v]) swap(u, v);
         D[u].emplace_back(v);
         adj[u].emplace_back(v);
