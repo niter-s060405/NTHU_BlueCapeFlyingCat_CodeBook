@@ -44,8 +44,8 @@ struct PlanarGraph{
                 }
 
                 pt.push_back(pt.front());
-                for (int i=0 ; i+1<pt.size() ; i++){
-                    area -= (v[pt[i]]^v[pt[i+1]]);
+                for (int j=0 ; j+1<pt.size() ; j++){
+                    area -= (v[pt[j]]^v[pt[j+1]]);
                 }
                 
                 // pt = face boundary
