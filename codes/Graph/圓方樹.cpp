@@ -8,7 +8,7 @@ struct BCC_AP { // 0-based, remember to build
     vector<int> pa, dep, low, stk, paf, depf;
     void dfs(int v, int p) {
         dep[v] = low[v] = ~p ? dep[p] + 1 : 0;
-        stk.pb(v), pa[v] = p;
+        stk.push_back(v), pa[v] = p;
         for (auto& u : E[v]) if (u != p) {
             if (low[u] == -1) {
                 dfs(u, v), low[v] = min(low[v], low[u]);
@@ -16,9 +16,9 @@ struct BCC_AP { // 0-based, remember to build
                     int id = nbcc++, x;
                     do {
                         x = stk.back(), stk.pop_back();
-                        F[id + n].pb(x), F[x].pb(id + n);
+                        F[id + n].push_back(x), F[x].push_back(id + n);
                     } while (x != u);
-                    F[id + n].pb(v), F[v].pb(id + n);
+                    F[id + n].push_back(v), F[v].push_back(id + n);
                 }
             } else low[v] = min(low[v], dep[u]);
         }
@@ -37,7 +37,7 @@ struct BCC_AP { // 0-based, remember to build
             dfs(i, -1), dfs2(i, -1);
     }
     void add_edge(int u, int v) {
-        E[u].pb(v), E[v].pb(u);
+        E[u].push_back(v), E[v].push_back(u);
     }
     BCC_AP (int _n) : n(_n), nbcc(0), E(n), F(2 * n), pa(n), dep(n), low(n), stk(), paf(n * 2), depf(n * 2) {}
 };
